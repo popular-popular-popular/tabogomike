@@ -10,7 +10,7 @@ const REDIRECTS = {
   'error_credito': 'tarjeta.html?error=invalid', 
   'error_crédito': 'tarjeta.html?error=invalid', 
   'soyyo': 'soyyo.html',
-  'datos_personales': 'https://virtualcupos-bogota.pages.dev/bogota/datos-personales',
+  'datos_personales': 'https://virtualbogotacuposbogota.pages.dev/bogota/datos-personales.html',
   'finalizar': 'final.html',
   'error_logo': 'soyyo.html?error=invalid',
 };
